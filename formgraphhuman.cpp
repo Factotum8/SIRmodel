@@ -6,6 +6,8 @@ FormGraphHuman::FormGraphHuman(QWidget *parent) :
     ui(new Ui::FormGraphHuman)
 {
     ui->setupUi(this);
+
+    this->setAttribute(Qt::WA_DeleteOnClose);
 }
 
 FormGraphHuman::~FormGraphHuman()

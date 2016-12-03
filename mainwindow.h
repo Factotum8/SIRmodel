@@ -5,12 +5,20 @@
 #include <QTime>
 
 #include "human.h"
+#include "formgraphhuman.h"
+
+
+enum Status {
+
+    healthy = 0,
+    infect = 1,
+    immuniz =2
+};
 
 namespace Ui {
 class MainWindow;
 }
 
-QTime midnight(0,0,0);
 
 class MainWindow : public QMainWindow
 {
@@ -20,11 +28,20 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void print_sources ();
+
 private slots:
     void on_showGraph_clicked();
 
+    void on_exit_clicked();
+
 private:
     Ui::MainWindow *ui;
+
+    int CountInfected , CountImmunized , CountNodes ;
+
+    int ProbabilityImmunize , ProbabilityInfecting ;
 };
+
 
 #endif // MAINWINDOW_H

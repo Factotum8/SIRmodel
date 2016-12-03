@@ -9,6 +9,7 @@
 
 #define SIZEMASS 10000
 
+
 class Human
 
 {
@@ -16,17 +17,23 @@ public:
     Human();
     void set_index(int i);
     void add_to_vector(int i);
+    void set_status(int values);
+    void set_iteration(int value);
 
     QVector <int> get_friends();
     int get_index();
+    int get_status();
+    int get_iteration();
 
-    friend bool parssing_file(Human* pointerHuman);
+
+    static bool parssing_file(Human* pointerHuman);
 
 
 
 private:
-    int index = 0;
-    int status = 0;
+    int index;
+    int status;
+    int iteration;
     QVector <int> friends;
 };
 
