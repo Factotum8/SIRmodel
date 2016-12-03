@@ -2,7 +2,8 @@
 
 Human::Human()
 {
-
+    index =0;
+    status=0;
 }
 
 void Human::set_index(int i)

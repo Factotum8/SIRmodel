@@ -25,7 +25,8 @@ public:
 
 
 private:
-    int index;
+    int index = 0;
+    int status = 0;
     QVector <int> friends;
 };
 
