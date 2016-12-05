@@ -26,7 +26,7 @@ public:
     int get_iteration();
 
 
-    static bool parssing_file(Human* pointerHuman);
+    static bool parssing_file(Human* pointer);
 
 
 

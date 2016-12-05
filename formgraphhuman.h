@@ -12,7 +12,7 @@ class FormGraphHuman : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit FormGraphHuman(QWidget *parent = 0);
+    FormGraphHuman(int iteration, QVector<double>* infected, QVector<double>* immunized,QWidget *parent = 0);
     ~FormGraphHuman();
 
 private:

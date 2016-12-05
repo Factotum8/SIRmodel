@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+Human* phuman = NULL;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -19,12 +21,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    if (phuman != NULL)
+        delete [] phuman;
+
     delete ui;
 }
 
 void MainWindow::on_showGraph_clicked()
 {
-    Human* phuman = NULL;
 
     if (ui->CountImmunized->text().isEmpty() || ui->CountInfected->text().isEmpty() ||
             ui->CountNodes->text().isEmpty() || ui->ProbabilityImmunize->text().isEmpty() || ui->ProbabilityInfecting->text().isEmpty() )
@@ -40,9 +44,23 @@ void MainWindow::on_showGraph_clicked()
     ProbabilityInfecting = ui->ProbabilityInfecting->text().toInt();
 
 
-    QVector <int> infected;
+    QVector <double>* infected = NULL;
+    QVector <double>* immunized = NULL;
+
+    infected = new QVector <double>;
+
+    immunized = new QVector <double>;
+
+    int raund = 1;
+    int* count_immuniz=NULL;
+    int* count_infect =NULL;
+
+    count_immuniz = new int;
+
+    count_infect = new int;
 
     phuman = new Human [CountNodes];
+
 
     if ( Human::parssing_file(phuman) ) {
 
@@ -56,8 +74,6 @@ void MainWindow::on_showGraph_clicked()
         if ( phuman[j].get_status() == 0 ){
 
             phuman[j].set_status(infect);
-
-            infected << j;
 
             ++i;
         }
@@ -75,9 +91,10 @@ void MainWindow::on_showGraph_clicked()
         }
     }
 
+    //    qDebug()<<"count_infect: "<<count_infect_immuniz(phuman);
     print_sources();
 
-    int raund = 1;
+
 
     while (CountInfected>0)
     {
@@ -87,11 +104,15 @@ void MainWindow::on_showGraph_clicked()
 
                 phuman[i].set_iteration(raund);
 
+                //                qDebug()<<"phuman[i]: "<<i;
+
                 if ( qrand()%100+1 <= ProbabilityImmunize ){ // пробуем имунизироваться
 
                     phuman[i].set_status(immuniz);
 
-                    --CountInfected;
+                    CountInfected--;
+
+                    //                    qDebug()<<"     CountInfected immuniz:"<<CountInfected;
                 }
 
                 int size = phuman[i].get_friends().size();
@@ -100,7 +121,11 @@ void MainWindow::on_showGraph_clicked()
 
                     int roll = qrand()%100+1;
 
+                    //                    qDebug()<<"     roll"<< roll;
+
                     int _friend = phuman[i].get_friends().at(j);
+
+                    //                    qDebug()<<"     get_friends at"<< _friend;
 
                     if (roll<=ProbabilityInfecting && phuman[ _friend ].get_iteration() != raund && phuman[ _friend ].get_status() != immuniz ) { // пробуем заразить
 
@@ -108,7 +133,7 @@ void MainWindow::on_showGraph_clicked()
 
                         phuman[ _friend ].set_iteration(raund);
 
-                        ++CountInfected;
+                        CountInfected++;
 
                     }
 
@@ -118,16 +143,25 @@ void MainWindow::on_showGraph_clicked()
         }
 
         ++raund;
-        if (raund % 2000 == 0) {
 
-            qDebug()<< "raund: "<<raund;
+        //            qDebug()<< "raund: "<<raund;
 
-            qDebug()<< "CountInfected: "<<CountInfected;
-        }
+        //            qDebug()<< "CountInfected: "<<CountInfected;
+
+        count_infect_immuniz(phuman,count_infect,count_immuniz);
+
+        (*infected)<<(*count_infect);
+
+
+        (*immunized)<<(*count_immuniz);
+
+        //            qDebug()<<"count_infect: "<<flag;
+
+        if ( (*infected).last() == 0 ) break;
     }
 
 
-    FormGraphHuman*  formgraphhuman = new FormGraphHuman;
+    FormGraphHuman*  formgraphhuman = new FormGraphHuman (raund,infected,immunized);
 
     formgraphhuman->show();
 }
@@ -145,4 +179,29 @@ void MainWindow::print_sources ()
     qDebug()<<"CountNodes: "<<CountNodes;
     qDebug()<<"ProbabilityImmunize: "<<ProbabilityImmunize;
     qDebug()<<"ProbabilityInfecting: "<<ProbabilityInfecting;
+}
+
+int MainWindow::count_infect_immuniz (Human* pointer,int* count_inf, int* count_imm)
+{
+    *count_inf=0;
+
+    *count_imm=0;
+
+    for (int i=0;i<CountNodes;++i)
+
+    {
+        if (pointer[i].get_status() == infect){
+
+            (*count_inf) = (*count_inf)+1;
+
+        }
+
+        if (pointer[i].get_status() == immuniz){
+
+            (*count_imm) = (*count_imm)+1;
+
+        }
+    }
+
+    return 0;
 }
