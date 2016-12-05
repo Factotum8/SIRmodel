@@ -127,7 +127,7 @@ void MainWindow::on_showGraph_clicked()
 
                     //                    qDebug()<<"     get_friends at"<< _friend;
 
-                    if (roll<=ProbabilityInfecting && phuman[ _friend ].get_iteration() != raund && phuman[ _friend ].get_status() != immuniz ) { // пробуем заразить
+                    if (roll<=ProbabilityInfecting && phuman[ _friend ].get_iteration() != raund && phuman[ _friend ].get_status() != immuniz && phuman[ _friend ].get_status() != infect) { // пробуем заразить
 
                         phuman[ _friend ].set_status(infect);
 
@@ -160,6 +160,8 @@ void MainWindow::on_showGraph_clicked()
         if ( (*infected).last() == 0 ) break;
     }
 
+
+    qDebug()<<"CountInfected"<<CountInfected;
 
     FormGraphHuman*  formgraphhuman = new FormGraphHuman (raund,infected,immunized);
 
